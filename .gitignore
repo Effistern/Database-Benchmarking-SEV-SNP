@@ -1,4 +1,4 @@
 .idea/
-campaign_data/
-out/
-figures/
+campaign_data/*
+out/*
+figures/*
