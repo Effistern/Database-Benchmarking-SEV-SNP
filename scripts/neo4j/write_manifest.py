@@ -41,7 +41,7 @@ json.dump({
     "data_device": data_device,
     "parameters": {
         "dataset": dataset,
-        "time_compression_ratio": "${TCR}",
+        "time_compression_ratio": tcr,
         "operations": operation, "warmup_operations": warmup_ops,
         "threads": threads, "driver_cores": driver_cores,
         "cooldown_seconds": cooldown, "sample_interval_s": sample_interval,

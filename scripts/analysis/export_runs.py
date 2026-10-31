@@ -18,8 +18,8 @@ COLUMNS = [
     "value", "higher_is_worse", "dataset_id",
     "ops_failed", "schedule_ok", "ops_late",
     "cpu_user_pct", "cpu_system_pct", "cpu_iowait_pct",
-    "cpu_steal_pct", "db_cpu_pct", "rss_mid", "data_device",
-    "disk_read_mib", "disk_read_total", "ceiling_share"
+    "cpu_steal_pct", "db_cpu_pct", "rss_mib", "data_device",
+    "disk_read_mib", "disk_reads_total", "disk_iops_share_of_ceiling"
 ]
 
 
@@ -91,9 +91,9 @@ def main():
             "db_cpu_pct": de(_os.get("db_cpu_pct", "")),
             "data_device": run.get("data_device", ""),
             "disk_read_mib": de(_os.get("disk_read_mib", "")),
-            "disk_read_total": de(_os.get("disk_read_total", "")),
-            "ceiling_share": de(_os.get("ceiling_share", "")),
-            "rss_mid": de(_os.get("rss_mid", "")),
+            "disk_reads_total": de(_os.get("disk_reads_total", "")),
+            "disk_iops_share_of_ceiling": de(_os.get("disk_iops_share_of_ceiling", "")),
+            "rss_mib": de(_os.get("rss_mib", "")),
         })
     out_dir = os.path.dirname(args.out)
     if out_dir:

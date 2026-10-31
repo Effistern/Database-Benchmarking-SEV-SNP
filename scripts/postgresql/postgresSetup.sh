@@ -238,7 +238,7 @@ log "postgresql is up"
 EFF_BUFFERS="$(sudo -u postgres psql -t -A -c "SHOW shared_buffers;" 2>/dev/null)"
 EFF_WORK_MEM="$(sudo -u postgres psql -t -A -c "SHOW work_mem;" 2>/dev/null)"
 EFF_EFF_CACHE="$(sudo -u postgres psql -t -A -c "SHOW effective_cache_size;" 2>/dev/null)"
-EFF_SYNC="$(sudo -u postgres psql -t -A -c "SHOW work_mem;" 2>/dev/null)"
+EFF_SYNC="$(sudo -u postgres psql -t -A -c "SHOW synchronous_commit;" 2>/dev/null)"
 
 if [[ "$WORK_MEM_MB" -gt 0 && "$EFF_WORK_MEM" != "${WORK_MEM_MB}MB" ]]; then
     die "work_mem is ${EFF_WORK_MEM}, expected ${WORK_MEM_MB} MB."

@@ -54,7 +54,7 @@ sudo rsync -a --info=progress2 --rsync-path="sudo rsync" \
   <user>@<vm>:/mnt/dbdata/
 
 # Swap files
-scp -i ~/.ssh/<key> /var/lib/db-benchmark/postgres_dataset.{resident,exceeding} <target>:/tmp/
+scp -i ~/.ssh/<key> /var/lib/db-benchmark/mongodb_dataset.{resident,exceeding} <target>:/tmp/
 ssh -i ~/.ssh/<key> <target> 'sudo mv /tmp/mongodb_dataset.{resident,exceeding} /var/lib/db-benchmark/'
 ```
 

@@ -428,7 +428,7 @@ restore_dataset() {
     count="$(mongo_num 'db.usertable.countDocuments({})' "$DBNAME")"
   else
     VERIFY_METHOD="estimatedDocumentCount"
-    count="$(mongonum 'db.usertable.estimatedDocumentCount()' "$DBNAME")"
+    count="$(mongo_num 'db.usertable.estimatedDocumentCount()' "$DBNAME")"
   fi
   count="${count:-0}"
   if ((count != RECORDS)); then
@@ -589,7 +589,7 @@ for ((rep = 1; rep <= REPS; rep++)); do
 
     if [[ "$REGIME" != "resident" ]]; then
       log "Cache fill during measurement: ${CACHE_FILL_MB:-?} MB into cache, ${DISK_READ_MB:-?} MB from disk (expected in the ${REGIME} regime)"
-    elif [[ -z "$DISK_READ_MB" || -z "${DATABASE_MIB:-}" ]] || ((DATASET_MIB == 0)); then
+    elif [[ -z "$DISK_READ_MB" || -z "${DATASET_MIB:-}" ]] || ((DATASET_MIB == 0)); then
       log "Warm-up verdict: UNKNOWN (os_summary or dataset size missing)"
     fi
     THROUGHPUT="$(
@@ -636,7 +636,7 @@ for ((rep = 1; rep <= REPS; rep++)); do
 
     python3 "$SCRIPT_DIR/write_mongodb_manifest.py" \
       "$RUN_DIR/manifest.json" \
-      "$(basename "RUN_DIR")" \
+      "$(basename "$RUN_DIR")" \
       "$TIMESTAMP" \
       "$ROUND" \
       "$CONFIG" \
@@ -656,7 +656,7 @@ for ((rep = 1; rep <= REPS; rep++)); do
       "${RUN_OPS}" \
       "${RUN_WU}" \
       "${OPS_SPEC}" \
-      "${WU_SPEC}]" \
+      "${WU_SPEC}" \
       "${WARMUP_INSERTS}" \
       "${MEASURED_RECORDCOUNT}" \
       "${THREADS}" \
@@ -667,7 +667,7 @@ for ((rep = 1; rep <= REPS; rep++)); do
       "${PRISTINE_DIR:-$DUMP_DIR}" \
     "${DUMP_DIR}" \
       "$(
-        [[ "DO_DRAIN" -eq 1 ]] &&
+        [[ "$DO_DRAIN" -eq 1 ]] &&
           echo "$DRAIN_SECONDS" ||
           echo 0
       )" \

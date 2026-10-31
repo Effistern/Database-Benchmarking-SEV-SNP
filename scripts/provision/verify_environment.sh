@@ -22,23 +22,23 @@ SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --heap-gb}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --out)
-    OUT_DIR="${2:?Missing value for --heap-gb}"
+    OUT_DIR="${2:?Missing value for --out}"
     shift 2
     ;;
   --vcpu)
-    EXPECT_VCPU="${2:?Missing value for --heap-gb}"
+    EXPECT_VCPU="${2:?Missing value for --vcpu}"
     shift 2
     ;;
   --mem)
-    EXPECT_MEM_GB="${2:?Missing value for --heap-gb}"
+    EXPECT_MEM_GB="${2:?Missing value for --mem}"
     shift 2
     ;;
   *)
-    echo "ERROR: Unknow argument: $1" >&2
+    echo "ERROR: Unknown argument: $1" >&2
     exit 2
     ;;
   esac
@@ -202,7 +202,7 @@ elif [[ "$BIT_SEV" -eq 1 ]]; then
 elif [[ "$KERNEL_LOG" == true || -n "$SEV_STATUS" ]]; then
   DETECTED="none"
 else
-  DETECTED="unknow"
+  DETECTED="unknown"
 fi
 
 fact "sev.detected" "$DETECTED"

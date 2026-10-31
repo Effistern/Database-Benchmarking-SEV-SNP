@@ -42,7 +42,7 @@ log "Preparing vm"
 # -----------------------------------------------------------------
 
 UNITS=(
-  unattended-upgrade.server
+  unattended-upgrades.service
   apt-daily.timer
   apt-daily-upgrade.timer
   packagekit.service
@@ -204,7 +204,6 @@ prepare_disk
 # Making memory similar
 # -----------------------------------------------------------------
 
-log "hihi"
 if [[ -w /sys/kernel/mm/transparent_hugepage/enabled ]]; then
   bash -c "echo $THP > /sys/kernel/mm/transparent_hugepage/enabled"
   if [[ -e /sys/kernel/mm/transparent_hugepage/defrag ]]; then
