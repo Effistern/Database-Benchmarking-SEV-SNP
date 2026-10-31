@@ -46,7 +46,6 @@ while [[ $# -gt 0 ]]; do
     --warmup-exceeding)     WARMUP_EXCEEDING="${2:?--warmup-exceeding requires a value}"; shift 2 ;;
     --detach)               DETACH=1;                             shift   ;;
     --no-microbench)        MICROBENCH=0;                         shift   ;;
-    --dry-run)              DRY_RUN=1;                            shift   ;;
     --poweroff-on-success)  POWEROFF=1;                           shift   ;;
     *)                      echo "ERROR: Unknown argument: $1" >&2; exit 2 ;;
   esac
