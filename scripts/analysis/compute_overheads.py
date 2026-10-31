@@ -133,7 +133,7 @@ def table_main(results):
         r"    \toprule",
         r"     & & \multicolumn{2}{c}{H1: SEV vs. BVM} & \multicolumn{2}{c}{H2: SEV-SNP vs BVM} & \multicolumn{2}{c}{H3: SEV-SNP vs. SEV} \\",
         r"     \cmidrule(lr){3-4}\cmidrule(lr){5-6}\cmidrule(lr){7-8}",
-        r"     Database & Regime & mean & 95\,\% CI & mean & 95\,\% CI \\",
+        r"     Database & Regime & mean & 95\,\% CI & mean & 95\,\% CI & mean & 95\,\% CI \\",
         r"     \midrule", 
     ]
     previous = None
