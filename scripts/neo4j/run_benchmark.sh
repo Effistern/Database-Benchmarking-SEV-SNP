@@ -43,7 +43,7 @@ while (($#)); do
     shift 2
     ;;
   --properties)
-    PROPERTIES="${2:?Missing value for --tcr}"
+    PROPERTIES="${2:?Missing value for --properties}"
     shift 2
     ;;
   --tcr)
@@ -51,19 +51,19 @@ while (($#)); do
     shift 2
     ;;
   --operations)
-    OPERATION="${2:?Missing value for --prisitine-dir}"
+    OPERATION="${2:?Missing value for --operations}"
     shift 2
     ;;
   --warmup-operations)
-    WARMUP_OPS="${2:?Missing value for --prisitine-dir}"
+    WARMUP_OPS="${2:?Missing value for --warmup-operations}"
     shift 2
     ;;
   --reps)
-    REPS="${2:?Missing value for --prisitine-dir}"
+    REPS="${2:?Missing value for --reps}"
     shift 2
     ;;
   --out)
-    OUT="${2:?Missing value for --prisitine-dir}"
+    OUT="${2:?Missing value for --out}"
     shift 2
     ;;
   *)

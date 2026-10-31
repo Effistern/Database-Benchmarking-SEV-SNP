@@ -25,19 +25,19 @@ TIME_UNIT="MICROSECONDS"
 while (($#)); do
   case "$1" in
   --updates-dir)
-    UPDATES_DIR="${2:?Missing value for --prisitine-dir}"
+    UPDATES_DIR="${2:?Missing value for --updates-dir}"
     shift 2
     ;;
   --parameters-dir)
-    PARAMETERS_DIR="${2:?Missing value for --prisitine-dir}"
+    PARAMETERS_DIR="${2:?Missing value for --parameters-dir}"
     shift 2
     ;;
   --validation-file)
-    VALIDATION_FILE="${2:?Missing value for --prisitine-dir}"
+    VALIDATION_FILE="${2:?Missing value for --validatrion-file}"
     shift 2
     ;;
   --out-dir)
-    OUT_DIR="${2:?Missing value for --prisitine-dir}"
+    OUT_DIR="${2:?Missing value for --out-dir}"
     shift 2
     ;;
   *)

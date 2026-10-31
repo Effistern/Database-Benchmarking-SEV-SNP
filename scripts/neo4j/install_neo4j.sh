@@ -28,7 +28,7 @@ LISTFILE="/etc/apt/sources.list.d/neo4j.list"
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --database}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --heap-gb)
