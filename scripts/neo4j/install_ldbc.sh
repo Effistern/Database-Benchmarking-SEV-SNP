@@ -19,7 +19,7 @@ LOG="/var/log/ldbc_v1_install.log"
 while (($#)); do
   case "$1" in
   --commit)
-    COMMIT="${2:?Missing value for --heap-gb}"
+    COMMIT="${2:?Missing value for --commit}"
     shift 2
     ;;
   *)

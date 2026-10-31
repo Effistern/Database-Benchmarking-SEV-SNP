@@ -28,23 +28,23 @@ MIN_FREE_MB=5120
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --heap-gb}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --regimes)
-    REGIMES="${2:?Missing value for --heap-gb}"
+    REGIMES="${2:?Missing value for --regimes}"
     shift 2
     ;;
   --repetitions)
-    REPS="${2:?Missing value for --heap-gb}"
+    REPS="${2:?Missing value for --repetitions}"
     shift 2
     ;;
   --round)
-    ROUND="${2:?Missing value for --heap-gb}"
+    ROUND="${2:?Missing value for --round}"
     shift 2
     ;;
   --out)
-    OUT_ROOT="${2:?Missing value for --heap-gb}"
+    OUT_ROOT="${2:?Missing value for --out}"
     shift 2
     ;;
   --detach)

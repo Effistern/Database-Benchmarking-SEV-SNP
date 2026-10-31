@@ -24,43 +24,43 @@ SCRIPT_IDR="$(dirname "$(readlink -f "$0")")"
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --heap-gb}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --mount)
-    MOUNT="${2:?Missing value for --heap-gb}"
+    MOUNT="${2:?Missing value for --mount}"
     shift 2
     ;;
   --out)
-    OUT="${2:?Missing value for --heap-gb}"
+    OUT="${2:?Missing value for --out}"
     shift 2
     ;;
   --size)
-    SIZE="${2:?Missing value for --heap-gb}"
+    SIZE="${2:?Missing value for --size}"
     shift 2
     ;;
   --runtime)
-    RUNTIME="${2:?Missing value for --heap-gb}"
+    RUNTIME="${2:?Missing value for --runtime}"
     shift 2
     ;;
   --ramp)
-    RAMP="${2:?Missing value for --heap-gb}"
+    RAMP="${2:?Missing value for --ramp}"
     shift 2
     ;;
   --repetitions)
-    REPS="${2:?Missing value for --heap-gb}"
+    REPS="${2:?Missing value for --repetitions}"
     shift 2
     ;;
   --seed)
-    SEED="${2:?Missing value for --heap-gb}"
+    SEED="${2:?Missing value for --seed}"
     shift 2
     ;;
   --block-sizes)
-    BLOCK_SIZES="${2:?Missing value for --heap-gb}"
+    BLOCK_SIZES="${2:?Missing value for --block-sizes}"
     shift 2
     ;;
   --pattern)
-    PATTERNS="${2:?Missing value for --heap-gb}"
+    PATTERNS="${2:?Missing value for --pattern}"
     shift 2
     ;;
   *)

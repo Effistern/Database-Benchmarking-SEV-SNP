@@ -28,35 +28,35 @@ LOG="/var/log/neo4j_tcr_calibration.log"
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --heap-gb}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --regime)
-    REGIME="${2:?Missing value for --heap-gb}"
+    REGIME="${2:?Missing value for --regime}"
     shift 2
     ;;
   --round)
-    ROUND="${2:?Missing value for --heap-gb}"
+    ROUND="${2:?Missing value for --round}"
     shift 2
     ;;
   --start-tcr)
-    START="${2:?Missing value for --heap-gb}"
+    START="${2:?Missing value for --start-tcr}"
     shift 2
     ;;
   --max-tcr)
-    MAXTCR="${2:?Missing value for --heap-gb}"
+    MAXTCR="${2:?Missing value for --max-tcr}"
     shift 2
     ;;
   --operations)
-    OPERATIONS="${2:?Missing value for --heap-gb}"
+    OPERATIONS="${2:?Missing value for --operations}"
     shift 2
     ;;
   --warm-up)
-    WARMUP_OPS="${2:?Missing value for --heap-gb}"
+    WARMUP_OPS="${2:?Missing value for --warm-up}"
     shift 2
     ;;
   --out)
-    OUT="${2:?Missing value for --heap-gb}"
+    OUT="${2:?Missing value for --out}"
     shift 2
     ;;
   --refine)

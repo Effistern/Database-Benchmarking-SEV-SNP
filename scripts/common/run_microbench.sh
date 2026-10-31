@@ -24,19 +24,19 @@ OUT=""
 while (($#)); do
   case "$1" in
   --config)
-    CONFIG="${2:?Missing value for --heap-gb}"
+    CONFIG="${2:?Missing value for --config}"
     shift 2
     ;;
   --round)
-    ROUND="${2:?Missing value for --heap-gb}"
+    ROUND="${2:?Missing value for --round}"
     shift 2
     ;;
   --phase)
-    PHASE="${2:?Missing value for --heap-gb}"
+    PHASE="${2:?Missing value for --phase}"
     shift 2
     ;;
   --out)
-    OUT="${2:?Missing value for --heap-gb}"
+    OUT="${2:?Missing value for --out}"
     shift 2
     ;;
   *)
