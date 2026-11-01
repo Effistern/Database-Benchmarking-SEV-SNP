@@ -216,8 +216,8 @@ done
 
 log "Summary: config=${CONFIG}"
 for r in "${REGIMES_[@]}"; do
-    n=$(find "${OUT_ROOT}/${ROUND}__${r}" -maxdepth 1 -name '*__r*' -type d 2>/dev/null | wc -l)
-    log " ${r}: ${RESULT[$r]} -- ${n - 1} of $(( NWL * REPS )) run directories"
+    n=$(find "${OUT_ROOT}/${ROUND}__${r}" -mindepth 1 -maxdepth 1 -name '*__r[0-9]*' -type d 2>/dev/null | wc -l)
+    log " ${r}: ${RESULT[$r]} -- ${n} of $(( NWL * REPS )) run directories"
 done
 
 GLOB=("${OUT_ROOT}/${ROUND}__"*/*/os_summary.json)

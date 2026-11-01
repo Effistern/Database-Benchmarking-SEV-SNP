@@ -73,7 +73,7 @@ def parse_pidstat(path, skip):
     idx = None
     for line in open(path, errors="replace"):
         if line.startswith("#"):
-            fields = line.lsplit("#").split()
+            fields = line.lstrip("#").split()
             idx = {name: i for i, name in enumerate(fields)}
             continue
         fields = line.split()
@@ -107,7 +107,7 @@ def main():
 
     dir = args.dir
     vmstat = parse_vmstat(os.path.join(dir, "vmstat.txt"), args.skip)
-    iostat = parse_iostat(os.path.join(dir, "iostat.txt"), args.device, args.skip)
+    iostat, _ = parse_iostat(os.path.join(dir, "iostat.txt"), args.device, args.skip)
     pid, db_processes = {}, 0
     for f in os.listdir(dir) if os.path.isdir(dir) else []:
         if f.startswith("pidstat_"):
