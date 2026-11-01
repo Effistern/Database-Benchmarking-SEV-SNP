@@ -106,7 +106,7 @@ esac
 [[ "$EUID" -eq 0 ]] || { echo "ERROR: must run as root" >&2; exit 2; }
 
 if (( DETACH )) && [[ -z "${CAMPAIGN_DETACHED:-}" ]]; then
-    UNIT="campaign-postgres-${CONFIG}-(date -u +%Y%m%dT%H%M%SZ)"
+    UNIT="campaign-postgres-${CONFIG}-$(date -u +%Y%m%dT%H%M%SZ)"
     SELF="$(readlink -f "$0")"
     command -v systemd-run >/dev/null 2>&1 ||
         { echo "ERROR: --detach needs systemd-run" >&2; exit 2; }

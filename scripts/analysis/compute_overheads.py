@@ -127,7 +127,7 @@ def table_main(results):
         r"\begin{table*}[!b]",
         r"  \centering",
         r"  \footnotesize",
-        r"  \caption{Overhead by database andworking-set regime.}",
+        r"  \caption{Overhead by database and working-set regime.}",
         r"  \label{tab:main_result}",
         r"  \begin{tabular}{llrlrlrl}",
         r"    \toprule",
@@ -149,7 +149,7 @@ def table_main(results):
         lines.append("     " + " & ".join(cells) + r" \\")
     lines += [
         r"    \bottomrule",
-        r"  \\end{tabular}",
+        r"  \end{tabular}",
         r"  \\[2pt]",
         r"  \begin{minipage}{\linewidth}\footnotesize",
         r"  Mean of paired per-repetition overheads with 95\,\% $t$-intervals; positive values mean slower.",

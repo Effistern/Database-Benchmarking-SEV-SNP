@@ -19,7 +19,7 @@ SAMPLE_INTERVAL=1
 STATE="/var/lib/db-benchmark"
 
 HERE="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
-HELPERS="$(cd "${HERE}/.." && pwd)/common/bench_helpers.sh"
+HELPERS="$(cd "${HERE}/.." && pwd)/common/bench_helper.sh"
 
 #--------------------------------------------------------------------------------
 # Argument parsing
@@ -231,7 +231,7 @@ postgres_pid() {
   systemctl show "$POSTGRES_UNIT" -p MainPID --value 2>/dev/null || echo 0
 }
 
-LOAD1="$(awk '{print $1; exit}' /proc/loadav 2>/dev/null || echo "0.00")"
+LOAD1="$(awk '{print $1; exit}' /proc/loadavg 2>/dev/null || echo "0.00")"
 
 DATA_DEVICE="sdb"
 if [[ -f "$HELPERS" ]]; then
@@ -309,7 +309,7 @@ EOF
 run_workload() {
   local workload="$1"
   local rep="$2"
-  local wl_upper="$(echo "$workload)" | tr '[:lower:]' '[:upper:]')"
+  local wl_upper="$(echo "$workload" | tr '[:lower:]' '[:upper:]')"
 
   TS="$(date -u +%Y%m%dT%H%M%SZ)"
   RUN_DIR="$(mkdir -p "${ROUND_DIR}" && cd "${ROUND_DIR}" && pwd)/${TS}__postgres__${CONFIG}__${workload}_${REGIME}__r$(printf '%02d' "$rep")"
@@ -322,13 +322,13 @@ run_workload() {
   mkdir -p "$RUN_DIR" "$RUN_DIR/os_metrics" "$RUN_DIR/db_metrics"
 
   if [[ "$workload" == "tproch" && "$REGIME" == "resident" ]]; then
-    for t in lineitem orders partsup customer part suppliert nation region; do
+    for t in lineitem orders partsupp customer part supplier nation region; do
       pg_query "$TARGET_DB" "SELECT count(*) FROM ${t};" >/dev/null 2>&1 || true
     done
   fi
 
   PGPID="$(postgres_pid)"
-  pg_query "$TARGET_DB" "SELECT * FROM pg_stat_database WHERE datname='${TARGET_DB};" >"$RUN_DIR/db_metrics/pg_stat_db_before.txt"
+  pg_query "$TARGET_DB" "SELECT * FROM pg_stat_database WHERE datname='${TARGET_DB}';" >"$RUN_DIR/db_metrics/pg_stat_db_before.txt"
 
   TCL_SCRIPT="/tmp/run_${workload}_r${rep}.tcl"
   generate_hammerdb_tcl "$workload" "$TCL_SCRIPT" "$TARGET_DB"
@@ -350,7 +350,7 @@ run_workload() {
   ELAPSED=$(($(date -u +%s) - MSTART))
   stop_samplers
 
-  pg_query "$TARGET_DB" "SELECT * FROM pg_stat_database WHERE datname='${TARGET_DB}';" >"$RUN_DIR/db_metrics/pg_stat_dbafter.txt"
+  pg_query "$TARGET_DB" "SELECT * FROM pg_stat_database WHERE datname='${TARGET_DB}';" >"$RUN_DIR/db_metrics/pg_stat_db_after.txt"
   if [[ "$HAVE_HELPERS" -eq 1 ]]; then
     summarise_run_os_metrics "$RUN_DIR" "$DATA_DEVICE"
   else

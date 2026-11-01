@@ -195,7 +195,7 @@ if [[ "$MAKE_PRISTINE" -eq 1 ]]; then
 
     if [[ -L "$PGDATA/pg_wal" ]]; then
         start_postgres
-        die "pg_wal is a symlink to $(readlink -f "$PDDATA/pg_wal")."
+        die "pg_wal is a symlink to $(readlink -f "$PGDATA/pg_wal")."
     fi
 
     run mkdir -p "$PRISTINE_DIR"
@@ -217,7 +217,7 @@ if [[ "$MAKE_PRISTINE" -eq 1 ]]; then
             printf 'pristine_bytes=%s\n'    "$BYTES"
             printf 'pristine_files=%s\n'    "$FILES"
             printf 'mem_total_mb=%s\n'      "$MEM_MB"
-            printf 'captured_at_utc=%s\n'   "$(date -u +%Y-%m-%dT%H:%H:%SZ)"
+            printf 'captured_at_utc=%s\n'   "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
             printf 'pg_major=%s\n'          "$PG_MAJOR"
         } > "$STATE/postgres_dataset"
 

@@ -152,10 +152,11 @@ else
 
     run bash -c "echo 'deb [arch=amd64,arm64 signed-by=${KEYRING}] http://apt.postgresql.org/pub/repos/apt ${CODENAME}-pgdg main' \
         > '${LISTFILE}'"
-    
+    run env DEBIAN_FRONTEND=noninteractive apt-get update -qq || die "apt-get update failed"
     run env DEBIAN_FRONTEND=noninteractive apt-get install -y -qq\
         "postgresql-${PG_VERSION}" ||
             die "postgresql-${PG_VERSION} install failed"
+    run apt-mark hold "postgresql-${PG_VERSION}" >/dev/null
     log "installed and version-held"
 fi
 
@@ -205,7 +206,7 @@ printf 'effective_cache_size = %sGB\n' "$(( SHARED_BUFFERS_GB + 8))" >> "$CONF_F
 # CPU affinity
 #--------------------------------------------------------------------------------
 
-AFFINITY_DIR="/etc/systemd/system/postgresql.service.d"
+AFFINITY_DIR="/etc/systemd/system/postgresql@${PG_VERSION}-main.service.d"
 AFFINITY_FILE="${AFFINITY_DIR}/10-cpuaffinity.conf"
 
 if [[ "$USE_AFFINITY" -eq 1 ]]; then
@@ -213,7 +214,7 @@ if [[ "$USE_AFFINITY" -eq 1 ]]; then
     run mkdir -p "$AFFINITY_DIR"
     cat > "$AFFINITY_FILE" <<EOF
 [Service]
-CPUAffinity={$PG_CORES}
+CPUAffinity=${PG_CORES//,/ }
 EOF
 else
     log "not pinning postgresql (--no-affinity)"
@@ -249,7 +250,7 @@ DEV_DATA="$(findmnt -no SOURCE "$DATA_MOUNT")"
 log "data_directory=${EFF_PATH} on ${DEV_DATA}"
 [[ "$EFF_PATH" == "$PG_DATA" ]] || die "data_directory is ${EFF_PATH}"
 
-ACT_AFF="$(systemctl show postgresql.service -p CPUAffinity --value || true)"
+ACT_AFF="$(systemctl show "postgresql@${PG_VERSION}-main.service" -p CPUAffinity --value || true)"
 log "postgresql CPUAffinity (systemd): ${ACT_AFF:-<none>}"
 
 SCRIPT_DIR="$(dirname "$(readlink -f "$0")")"

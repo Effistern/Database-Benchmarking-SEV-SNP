@@ -15,16 +15,12 @@ PREFIX="/opt";
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --hammerdb-version)
-            HAMMERDB_VERSION="{2:?ERROR: --hammerdb-version requires a value}"
+            HAMMERDB_VERSION="${2:?ERROR: --hammerdb-version requires a value}"
             shift 2
             ;;
         --prefix)
-            PREFIX="{2:?ERROR: --prefix requires a value}"
+            PREFIX="${2:?ERROR: --prefix requires a value}"
             shift 2
-            ;;
-        -h| --help)
-            usage
-            exit 0
             ;;
         *)
             echo "ERROR: Unknown argument: $1" >&2
