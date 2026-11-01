@@ -105,7 +105,7 @@ if [[ -z "$CONVERTED_DIR" ]]; then
   CONVERTED_DIR="$(dirname "$CSV_DIR")/converted"
 fi
 
-if [[ -n "$DUMP_DIR" ]]; then
+if [[ -z "$DUMP_DIR" ]]; then
   DUMP_DIR="$(dirname "$DATA_DIR")/dumps/ldbc-v1-sf${SF}"
 fi
 
@@ -273,7 +273,7 @@ systemctl start neo4j
 
 AUTH=(-u neo4j -p "admin")
 cq() {
-  cypher-shell -a bolt://127.0.0.1/7687 "${AUTH[@]}" --format plain "$@"
+  cypher-shell -a bolt://127.0.0.1:7687 "${AUTH[@]}" --format plain "$@"
 }
 
 for i in $(seq 1 45); do

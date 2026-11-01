@@ -1,4 +1,4 @@
-import json, subprocess, datetime, platform, sys
+import json, subprocess, datetime, platform, sys, os, re
 
 (manifest_path, parsed_path, directory, run_id, ts, round_, config, regime, workload,
  rep, ok, data_device, dataset, tcr, operation, warmup_ops, threads, driver_cores,
@@ -15,11 +15,11 @@ def sh(c):
 
 p = json.load(open(parsed_path))
 json.dump({
-    "run_id": run_id,
+    "run_id": os.path.basename(run_id.rstrip("/")),
     "timestamp_utc": ts, "round": round_, "config": config,
     "regime": regime,
     "database": "neo4j", "tool": "ldbc-snb-interactive-v1", "workload": workload,
-    "repetition": rep, "succeeded": ok,
+    "repetition": int(rep), "succeeded": ok == "True",
     "primary_metric": ("latency_geomean_us"
                        if regime == "resident"
                        else "fixed_work_completion_seconds"),
@@ -42,18 +42,18 @@ json.dump({
     "parameters": {
         "dataset": dataset,
         "time_compression_ratio": tcr,
-        "operations": operation, "warmup_operations": warmup_ops,
-        "threads": threads, "driver_cores": driver_cores,
-        "cooldown_seconds": cooldown, "sample_interval_s": sample_interval,
-        "restore_seconds": restore_seconds,
+        "operations": int(operation), "warmup_operations": int(warmup_ops),
+        "threads": int(threads), "driver_cores": driver_cores,
+        "cooldown_seconds": int(cooldown), "sample_interval_s": int(sample_interval),
+        "restore_seconds": int(restore_seconds),
     },
-    "fixed_work_completion_seconds": elapsed,
+    "fixed_work_completion_seconds": int(elapsed),
     "neo4j_affinity": sh("systemctl show neo4j.service -p CPUAffinity --value"),
     "neo4j_version": sh("dpkg-query -W -f='${Version}' neo4j"),
     "ldbc_commit": sh("awk -F= '/^commit=/{print $2}' " + state + "/ldbc_install"),
     "query_files": sh("ls " + ldbc_home + "/cypher/queries/*.cypher 2>/dev/null | wc -l"),
     "ldbc_version": "v1",
-    "driver_java_major": driver_java_home,
+    "driver_java_major": (re.search(r"java-(\d+)", driver_java_home) or re.search(r"(.*)", "unknown")).group(1),
     "driver_java_home": driver_java_home,
     "kernel": platform.release(), "hostname": platform.node(),
     "load_before_run": load_avg,

@@ -74,7 +74,7 @@ if [[ ! -f "$STATE/ldbc_install" ]]; then
 fi
 
 DRIVER_DIR="$LDBC_HOME/cypher/driver"
-if [[ -f DRIVER_DIR ]]; then
+if [[ ! -d "$DRIVER_DIR" ]]; then
   die "Driver dir not found"
 fi
 
@@ -92,7 +92,7 @@ if [[ -z "$UPDATES_DIR" ]]; then
       UPDATES_DIR="$(dirname "$CSV_REC")/update-streams"
     fi
   fi
-  if [[ -n "$UPDATES_DIR" ]]; then
+  if [[ -z "$UPDATES_DIR" ]]; then
     die "Can't determine update-streams"
   fi
 fi
@@ -147,7 +147,7 @@ fi
 
 set_prop() {
   local file="$1" key="$2" value="$3" esc
-  esc="$(printf '%s' "$key" | sed 's/[.[\*^$]/\\%/g')"
+  esc="$(printf '%s' "$key" | sed 's/[.[\*^$]/\\&/g')"
   if grep -qE "^[[:space:]]*${esc}[[:space:]]*=" "$file"; then
     sed -i -E "s|^[[:space:]]*${esc}[[:space:]]*=.*|${key}=${value}|" "$file"
   else

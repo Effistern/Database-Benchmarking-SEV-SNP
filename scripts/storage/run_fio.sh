@@ -182,7 +182,6 @@ python3 "$SCRIPT_IDR/fio_manifest.py" "$CAMPAIGN/manifest.json" \
   "$RUNTIME" \
   "$RAMP" \
   "$IODEPTH" \
-  "$RAMP" \
   "$REPS" \
   "$SEED" \
   "${JOB_NAMES[@]}"

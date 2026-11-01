@@ -102,7 +102,7 @@ if [[ -z "$ROUND" ]]; then
 fi
 
 if [[ -z "$REPS" ]]; then
-  echo "ERROR: --round required" >&2
+  echo "ERROR: --reps required" >&2
   exit 2
 fi
 
@@ -124,11 +124,13 @@ if [[ -z "$PROPERTIES" ]]; then
 fi
 
 if [[ -z "$PROPERTIES" ]]; then
-  echo "ERROR: --properties required (no file found)"
+  echo "ERROR: --properties required (no file found)" >&2
+  exit 2
 fi
 
 if [[ -z "$TCR" ]]; then
-  echo "ERROR: --tcr required"
+  echo "ERROR: --tcr required" >&2
+  exit 2
 fi
 
 # -----------------------------------------------------------------
@@ -184,7 +186,7 @@ start_samplers() {
   vmstat -t "$SAMPLE_INTERVAL" >"$dir/vmstat.txt" 2>&1 &
   SAMPLER_PIDS+=($!)
   if [[ "${neopid:-0}" -gt 0 ]]; then
-    pidstat -p "$neopid" -u -r- -d -h "$SAMPLE_INTERVAL" >"$dir/pidstat_neo4j.txt" 2>&1 &
+    pidstat -p "$neopid" -u -r -d -h "$SAMPLE_INTERVAL" >"$dir/pidstat_neo4j.txt" 2>&1 &
     SAMPLER_PIDS+=($!)
   fi
 }
@@ -406,6 +408,8 @@ for rep in $(seq 1 "$REPS"); do
     "$LOAD_AVG"
   MEAN="$(python3 -c "import json; d=json.load(open('$PARSED')); v=d.get('latency_mean_us'); print(f'{v:.1f}' if v else 'n/a')" 2>/dev/null || echo n/a)"
   log " Mean latency ${MEAN}us, completed in ${ELAPSED}"
+  log "Cooldown ${COOLDOWN}"
+  sleep "$COOLDOWN"
 done
 
 log "All Repetitions done, ${FAILED} failed rounds"

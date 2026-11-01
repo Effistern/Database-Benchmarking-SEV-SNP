@@ -61,7 +61,7 @@ for pkg in git maven "openjdk-${JDK}-jdk"; do
 done
 
 JAVA_HOME_DIR="/usr/lib/jvm/java-${JDK}-openjdk-amd64"
-if [[ -x "$JAVA_HOME_DIR/bin/java" ]]; then
+if [[ ! -x "$JAVA_HOME_DIR/bin/java" ]]; then
   log "Installing Openjdk-${JDK}"
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "openjdk-${JDK}-jdk-headless" ||
     die "Java ${JDK} was not found. Re-run install or do it manually"

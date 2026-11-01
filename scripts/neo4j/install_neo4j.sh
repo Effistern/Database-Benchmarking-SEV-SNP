@@ -141,7 +141,7 @@ mkdir -p "$DATADIR" "$TRANSACTIONDIR"
 chown -R neo4j:neo4j "$DATADIR" "$TRANSACTIONDIR" "$LOGDIR" 2>/dev/null || true
 
 JAVA_HOME_DIR="/usr/lib/jvm/java-11-openjdk-amd64"
-if [[ -x "$JAVA_HOME_DIR/bin/java" ]]; then
+if [[ ! -x "$JAVA_HOME_DIR/bin/java" ]]; then
   log "Installing Openjdk-11"
   DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "openjdk-11-jdk-headless" ||
     die "Java 11 was not found. Re-run install or do it manually"
@@ -169,7 +169,6 @@ dbms.memory.heap.max_size=${HEAP_GB}g
 dbms.memory.pagecache.size=${PAGECACHE_GB}g
 dbms.default_listen_address=127.0.0.1
 dbms.security.auth_enabled=true
-MIN_PW_LINE=""
 dbms.connector.bolt.enabled=true
 dbms.connector.bolt.listen_address=127.0.0.1:7687
 dbms.connector.http.enabled=false
