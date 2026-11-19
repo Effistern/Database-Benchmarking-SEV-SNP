@@ -123,6 +123,7 @@ DS_PRISTINE_BYTES="$(ds pristine_bytes)"
 
 REGIME="$DS_REGIME"
 WORKLOAD="$DS_WORKLOAD"
+SCALE_FACTOR="${SCALE_FACTOR:-$(ds scale_factor)}"
 SCALE_FACTOR="${SCALE_FACTOR:-1}"
 
 case "$WORKLOAD" in

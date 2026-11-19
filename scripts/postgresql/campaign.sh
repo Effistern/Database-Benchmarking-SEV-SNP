@@ -14,11 +14,10 @@ DATASETS="tpcc-w20,tpcc-w260,tproch-sf1,tproch-sf10"
 REPS=12
 ROUND="campaign_postgres"
 OUT_ROOT="./raw_results"
-POWEROFF=0
 MICROBENCH=1
 
 PARAMS_tpcc_w20="2  2   5"
-PARAMS_tpcc_w260="1  2   5"
+PARAMS_tpcc_w260="2  2   5"
 PARAMS_tproch_sf1="1  0  0"
 PARAMS_tproch_sf10="1  0  0"
 
@@ -78,10 +77,6 @@ while [[ $# -gt 0 ]]; do
             ;;
         --no-microbench)
             MICROBENCH=0
-            shift
-            ;;
-        --poweroff-on-success)
-            POWEROFF=1
             shift
             ;;
         *)
@@ -261,11 +256,6 @@ done
 if (( FAILED )); then
     log "campaign finished with ${FAILED} failed dataset(s)"
     exit 1
-fi
-
-if (( POWEROFF )); then
-    log "all dataset completed, syncing and powering off in 60s."
-    sync; sleep 60; log "powering off"; shutdown -h now
 fi
 
 log "campaign complete"
