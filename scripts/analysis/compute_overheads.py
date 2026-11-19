@@ -25,7 +25,7 @@ ARMS = (
     Arm("neo4j", "resident", "ldbc-rw", "resident", "Neo4j res."),
     Arm("neo4j", "exceeding", "ldbc-rw", "exceeding", "Neo4j exc."),
     Arm("postgresql", "resident", "tprocc", "resident, tprocc", "TPROC-C res."),
-    Arm("postgresql", "resident", "tproch", "resident, tproch", "TPROC-C res."),
+    Arm("postgresql", "resident", "tproch", "resident, tproch", "TPROC-H res."),
     Arm("postgresql", "exceeding", "tprocc", "exceeding, tprocc", "TPROC-C exc."),
     Arm("postgresql", "exceeding", "tproch", "exceeding, tproch", "TPROC-H exc.")
 )

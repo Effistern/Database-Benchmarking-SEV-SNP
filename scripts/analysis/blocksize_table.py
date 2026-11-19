@@ -7,8 +7,7 @@ from pathlib import Path
 import numpy as np
 
 COMPARISON_TABLE = (("SEV vs BVM", "sev", "none"),
-                    ("SEV-SNP vs BVM", "snp", "none"),
-                    ("SEV-SNP vs SEV", "snp", "sev"))
+                    ("SEV-SNP vs BVM", "snp", "none"), ("SEV-SNP vs SEV", "snp", "sev"))
 SIZES= ("4k", "16k", "64k")
 UNIT = { "k": 1024, "m": 1048576 }
 
@@ -25,13 +24,13 @@ def find_sweeps(roots, depth=3):
         for dirpath,dirs, _ in os.walk(root):
             path = Path(dirpath)
             if "__iosize__" in path.name:
-                found.append(path.name)
+                found.append(path)
                 dirs[:]=[]
             elif len(path.relative_to(root).parts) >= depth:
                 dirs[:]=[]
     return sorted(found)
 
-def load(sweeps):
+def load(sweeps, warmup=1):
     lat = {}
     for sweep in sweeps:
         config = sweep.name.split("__iosize__")[1].split("__")[0]
@@ -41,6 +40,9 @@ def load(sweeps):
         for run in sorted(runs.iterdir()):
             fio_json = run / "fio.json"
             if not fio_json.is_file():
+                continue
+            rep = run.name.rsplit("__r", 1)[1] if "__r" in run.name else ""
+            if rep.isdigit() and int(rep) <= warmup:
                 continue
             try:
                 data = json.loads(fio_json.read_text())
@@ -63,7 +65,7 @@ def fit (lat, a, b, pattern):
 def sgn (x, digits=1):
     return "$%+.*f$" % (digits, x)
 
-def table (read_fits, write_fits, n):
+def table (read_fits):
     lines = [
         r"\begin{table}[t]",
         r"  \centering",
@@ -85,7 +87,6 @@ def table (read_fits, write_fits, n):
         r"  \\[2pt]",
         r"  \begin{minipage}{\linewidth}"
         r"  \footnotesize",
-        r"  Least-squares fit of the latency difference over 4, 16 and 64\,KiB"
         r"  \end{minipage}",
         r"\end{table}",
     ]
@@ -108,7 +109,7 @@ def main():
     for pattern, fits in (("randread", read_fits), ("randwrite", write_fits)):
         for label, (fixed, per_mib, y) in fits.items():
             print("%-9s %-15s fixed %+6.1f us/IO per MiB %+6.0f us added at 4/16/64 KiB %s us"
-                  % (pattern, label, fixed, per_mib, ", ".join("%+.1" % v for v in y)))
+                  % (pattern, label, fixed, per_mib, ", ".join("%+.1f" % v for v in y)))
     args.out.mkdir(parents=True, exist_ok=True)
     with (args.out / "blocksize.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -117,7 +118,7 @@ def main():
             for label, (fixed, per_mib, y) in fits.items():
                 w.writerow([pattern, label, fixed, per_mib,y[0], y[1], y[2], n])
     (args.out / "table_storage_blocksize.tex").write_text(
-        "\n".join(table(read_fits, write_fits, n)) + "\n", encoding="utf-8")
+        "\n".join(table(read_fits)) + "\n", encoding="utf-8")
 
 if __name__ == "__main__":
     main()
