@@ -26,7 +26,7 @@ HAS_TO_BE_EQUAL = [
     ("os.pretty_name", "OS release"),
     ("os.kernel", "kernel version"),
     ("os.version_id", "OS version id"),
-    ("mem.swa_total_kb", "swap size"),
+    ("mem.swap_total_kb", "swap size"),
     ("mem.thp", "transparent huge pages"),
     ("mem.hugepages", "hugepages"),
     ("disk.root_fstype", "root filesystem type"),
@@ -36,7 +36,7 @@ HAS_TO_BE_EQUAL = [
     ("datadisk.options", "data disk mount options"),
     ("datadisk.size", "data disk size"),
     ("datadisk.readahead_kb", "data disk read-ahead"),
-    ("datadisk.scheduler", "data disk I/O scheduler"),
+    ("datadisk.schedule", "data disk I/O scheduler"),
     ("datadisk.rotational", "data disk rotational flag"),
     ("db.version", "database version"),
 ]

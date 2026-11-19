@@ -27,7 +27,7 @@ sudo cp /var/lib/db-benchmark/mongodb_dataset /var/lib/db-benchmark/mongodb_data
 ```bash
 # resident
 sudo cp /var/lib/db-benchmark/mongodb_dataset.resident /var/lib/db-benchmark/mongodb_dataset
-mongorestore --quiet --drop --nsInclude "ycsb.*" \
+mongorestore --drop --nsInclude "ycsb.*" \
   /mnt/dbdata/mongodb_dump/ycsb-r3000000-f100-s20262027
 sudo systemctl stop mongod
 sudo cp -a /mnt/dbdata/mongodb /mnt/dbdata/pristine_ycsb-r3000000-f100-s20262027
@@ -35,7 +35,7 @@ sudo systemctl start mongod
 
 # exceeding
 sudo cp /var/lib/db-benchmark/mongodb_dataset.exceeding /var/lib/db-benchmark/mongodb_dataset
-mongorestore --quiet --drop --nsInclude "ycsb.*" \
+mongorestore --drop --nsInclude "ycsb.*" \
   /mnt/dbdata/mongodb_dump/ycsb-r26000000-f100-s20262027
 sudo systemctl stop mongod
 sudo cp -a /mnt/dbdata/mongodb /mnt/dbdata/pristine_ycsb-r26000000-f100-s20262027

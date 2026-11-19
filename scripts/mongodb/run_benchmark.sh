@@ -384,7 +384,7 @@ reset_mongo_state() {
   wait_for_mongod
   sync
   echo 3 >/proc/sys/vm/drop_caches
-  sleep 5
+  sleep 60
 }
 
 restore_dataset() {

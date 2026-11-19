@@ -101,7 +101,7 @@ def main():
     )
     ap.add_argument("dir")
     ap.add_argument("--device", default="sdb")
-    ap.add_argument("--device-iops-ceiling", type=float, default=10800)
+    ap.add_argument("--device-iops-ceiling", type=float, default=100000)
     ap.add_argument("--skip", type=int, default=10)
     args = ap.parse_args()
 

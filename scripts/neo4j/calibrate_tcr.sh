@@ -17,6 +17,7 @@ MAX_DISK_UTIL="95"
 OUT="./raw_results"
 WORKLOAD="ldbc-rw"
 REFINE=0
+PROPERTIES=""
 
 SELF_DIR="$(dirname "$(readlink -f "$0")")"
 RUNNER="$SELF_DIR/run_benchmark.sh"
@@ -59,6 +60,10 @@ while (($#)); do
     OUT="${2:?Missing value for --out}"
     shift 2
     ;;
+  --properties)
+    PROPERTIES="${2:?Missing value for --properties}"
+    shift 2
+    ;;
   --refine)
     REFINE=1
     shift
@@ -93,6 +98,16 @@ resident | exceeding) ;;
   exit 2
   ;;
 esac
+
+if [[ -z "$PROPERTIES" ]]; then
+  echo "ERROR: --properties required" >&2
+  exit 2
+fi
+
+if [[ ! -f "$PROPERTIES" ]]; then
+  echo "ERROR: $PROPERTIES not found" >&2
+  exit 2
+fi
 
 if [[ ! "$WARMUP_OPS" =~ ^[0-9]+$ ]]; then
   echo "ERROR: --regime required" >&2
@@ -145,9 +160,9 @@ probe() {
 
   before="$(find "$CAMPAIGN" -maxdepth 1 -type d -name '2*' 2>/dev/null | wc -l)"
 
-  local args=(--config "$CONFIG" --regime "$REGIME" --round "$ROUND" --tcr "$tcr"
+  local args=(--config "$CONFIG" --regime "$REGIME" --round "$ROUND" --properties "$PROPERTIES" --tcr "$tcr"
     --operations "$OPERATIONS" --warmup-operations "$WARMUP_OPS"
-    --reps 1 --out "$OUT")
+    --reps 1 --out "$OUT" )
 
   if ! "$RUNNER" "${args[@]}" >"$CAMPAIGN/probe_${tag}.log" 2>&1; then
     log "Run failed , check ${CAMPAIGN}/probe_${tag}.log"
@@ -173,10 +188,9 @@ probe() {
 }
 
 record() {
-  if [[ ! -f $SUMMARY ]]; then
+  [[ -f "$SUMMARY" ]] ||
     printf 'tcr\tverdict\tlate\ttotal\tlate_pct\tmean_us\tdisk_util_pct\n' >"$SUMMARY"
-    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$@" >>"$SUMMARY"
-  fi
+  printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "$@" >>"$SUMMARY"
 }
 
 touch "$LOG"
@@ -241,7 +255,7 @@ if [[ "$REFINE" -eq 1 && -n "$FIRST_PASS" && -n "$LAST_FAIL" ]]; then
       PCT="$(python3 -c "print(f'{100*$LATE/$TOTAL:.1f}')")"
     fi
     log " Verdict: ${VERDICT} with TCR of ${MID}"
-    record "$TCR" "$VERDICT" "$LATE" "$TOTAL" "$PCT" "$MEAN" "$UTIL"
+    record "$MID" "$VERDICT" "$LATE" "$TOTAL" "$PCT" "$MEAN" "$UTIL"
     if [[ "$VERDICT" == "pass" ]]; then
       HI="$MID"
     else

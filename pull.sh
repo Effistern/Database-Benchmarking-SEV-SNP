@@ -1,5 +1,5 @@
 #!/bin/bash
-ZONE="europe-west3-a"
+ZONE="europe-west4-a"
 DEST="./raw_results"
 
 

@@ -221,6 +221,37 @@ def table_tests(result, n_tests):
     ]
     return lines
 
+def table_regime(changes):
+    lines = [
+        r"\begin{table}[b]",
+        r"  \centering",
+        r"  \footnotesize",
+        r"  \caption{H4: Change in overhead between the regimes}"
+        r"  \label{tab:regime_effect}",
+        r"  \setlength{\tabcolsep}{3pt}",
+        r"  \resizebox{\columnwidth}{!}{%",
+        r"  \begin{tabular}{lrrr}",
+        r"    \toprule",
+        r"    Arm & H1 & H2 & H3 \\",
+        r"    \midrule",
+    ]
+    for label, _db, _wl in H4_ARMS:
+        cells = [label]
+        for h, _, _, in COMPARISONS:
+            c = changes[(label, h)]
+            cells.append(r"%s {\scriptsize[%s, %s]}" % (sgn(c["diff"], 1), sgn(c["ci_low"], 1), sgn(c["ci_high"], 1)))
+        lines.append("     " + " & ".join(cells) + r" \\")
+    lines += [
+        r"    \bottomrule",
+        r"  \end{tabular}}",
+        r"  \\[2pt]",
+        r"  \begin{minipage}{\linewidth}\footnotesize",
+        r"  Mean overhead in the exceeding minus the resident regime in pp, positive: overhead grows, with 95\,\% interval Welch's $t$-test."
+        r"  \end{minipage}",
+        r"\end{table}",
+    ]
+    return lines
+
 def neo4j_per_query(runs):
     rows = []
     for regime in ("resident", "exceeding"):
@@ -297,6 +328,19 @@ def main():
               ])
     write_tex(args.out / "table_main_result.tex", table_main(results))
     write_tex(args.out / "table_tests.tex", table_tests(results, len(rows)))
+
+    # Table: H4 regime change
+    changes, h4_rows = {}, []
+    for label, db, wl in H4_ARMS:
+        for h, a, b, in COMPARISONS:
+            c = regime_change(paired(runs, db, "resident", wl, a, b),
+                              paired(runs, db, "exceeding", wl, a, b))
+            changes[(label, h)] = c
+            h4_rows.append(dict(arm=label, comparison=h, **c))
+    write_csv(args.out / "regime_effect.csv",
+              h4_rows,
+              ["arm", "comparison", "diff", "ci_low", "ci_high", "df", "p"])
+    write_tex(args.out / "table_regime_effect.tex", table_regime(changes))
 
     # Table: OS metrics
     samples = defaultdict(list)

@@ -78,13 +78,12 @@ for f in ("driver.stdout", "driver.stderr"):
     p = os.path.join(run_dir, f)
     if os.path.isfile(p):
         txt += open(p, errors="replace").read()
-low = txt.lower()
-if "failed schedule audit" in low:
-    out["schedule_audit_passed"] = False
-elif "passed schedule audit" in low or "schedule audit passed" in low:
-    out["schedule_audit_passed"] = True
+audits = re.findall(r"(FAILED|PASSED) SCHEDULE AUDIT", txt)
+if audits:
+    out["schedule_audit_passed"] = audits[-1] == "PASSED"
+measured_txt = txt[txt.rfind("Exporting workload results validation"):]
 late_by_op = {op: int(n) for op, n in
-              re.findall(r"Late Count for (\S+)\s*\((\d+)\)", txt)}
+              re.findall(r"Late Count for (\S+)\s*\((\d+)\)", measured_txt)}
 if late_by_op:
     out["late_operations"] = sum(late_by_op.values())
     out["late_operations_by_type"] = late_by_op

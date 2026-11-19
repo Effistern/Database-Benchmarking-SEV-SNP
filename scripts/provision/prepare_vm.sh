@@ -5,7 +5,7 @@ set -euo pipefail
 # Variables
 # -----------------------------------------------------------------
 
-DISKNAME="dbdata"
+DISKNAME="local-nvme-ssd-0"
 DEVICE=""
 MOUNTPOINT="/mnt/dbdata"
 READHEAD_KB=128
@@ -103,7 +103,7 @@ fi
 # Data disk
 # -----------------------------------------------------------------
 
-BY_ID="/dev/disk/by-id/google-${DISKNAME}"
+BY_ID="/dev/nvme0n1"
 MOUNT_OPTS="defaults,noatime"
 
 locate_device() {

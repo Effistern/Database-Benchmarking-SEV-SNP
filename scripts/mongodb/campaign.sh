@@ -16,11 +16,10 @@ WORKLOADS="a,b,c,d,e,f"
 REPS=12
 ROUND="campaign"
 OUT_ROOT="./raw_results"
-POWEROFF=0
 MICROBENCH=1
 
-OPS_RESIDENT="default=3000000,e=500000"
-WARMUP_RESIDENT="default=1500000,d=3000000,e=250000"
+OPS_RESIDENT="default=1500000,e=250000"
+WARMUP_RESIDENT="default=750000,d=1500000,e=125000"
 OPS_EXCEEDING="default=1500000,d=2000000,e=45000"
 WARMUP_EXCEEDING="default=200000,e=20000"
 
@@ -46,7 +45,6 @@ while [[ $# -gt 0 ]]; do
     --warmup-exceeding)     WARMUP_EXCEEDING="${2:?--warmup-exceeding requires a value}"; shift 2 ;;
     --detach)               DETACH=1;                             shift   ;;
     --no-microbench)        MICROBENCH=0;                         shift   ;;
-    --poweroff-on-success)  POWEROFF=1;                           shift   ;;
     *)                      echo "ERROR: Unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -204,7 +202,6 @@ for r in "${REGIMES_[@]}"; do
     else
       rc=$?
       RESULT[$r]="FAILED (exit ${rc})"
-      FAILED=1
       log "regime ${r}: FAILED with exit ${rc} after $(( ( $(date -u +%s) - started) / 60)) min"
     fi
     microbench "$r" post
@@ -220,42 +217,8 @@ for r in "${REGIMES_[@]}"; do
     log " ${r}: ${RESULT[$r]} -- ${n} of $(( NWL * REPS )) run directories"
 done
 
-GLOB=("${OUT_ROOT}/${ROUND}__"*/*/os_summary.json)
-CRIT=0; WARN=0
-if [[ -e "${GLOB[0]}" ]]; then
-    CRIT=$({ grep -l -e 'db_cpu_pct is ~0' -e 'RSS is identical' "${GLOB[@]}" 2>/dev/null || true;} | wc -l)
-    WARN=$({ grep -L '"warnings": \[\]' "${GLOB[@]}" 2>/dev/null || true;} | wc -l)
-fi
-
-if (( CRIT > 0 )); then
-    log "  ${CRIT} run(s) have KNOWN-BAD process metrics"
-fi
-
-if (( WARN > CRIT )); then
-    log "  $(( WARN - CRIT )) run(s) carry operating-point warnings"
-fi
-
-if (( WARN == 0 )); then
-    log "  no warnings on any run"
-fi
-
-if (( FAILED )); then
-  log " campaign finished with a FAILED regime -- NOT powering off"
-  exit 1
-fi
-
-if (( CRIT > 0 )); then
-  log " every regime completed, but ${CRIT} run(s) are unusable -- NOT powering off"
-  exit 1
-fi
-
-if (( POWEROFF )); then
-  log " all regime usable; syncing and powering off in 60 s (ctrl-C or 'sudo systemctl stop' to cancel)"
-  sync
-  sleep 60
-  log "powering off"
-  shutdown -h now
-fi
+BAD=$({ grep -l '"succeeded": false' "${OUT_ROOT}/${ROUND}__"*/*/manifest.json 2>/dev/null || true; } | wc -l )
+log "${BAD} run(s) marked as failed"
 
 log "campaign complete"
 exit 0

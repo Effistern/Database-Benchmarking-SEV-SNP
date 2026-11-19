@@ -205,12 +205,18 @@ def figure_mongodb(rows, folder):
     save(fig, folder, "fig2_mongodb_workloads")
 
 
-def figure_neo4j(rows, folder):
+def figure_neo4j(rows, folder, reference="short"):
     res = [r for r in rows if r["regime"] == "resident"]
-    cheap = [r for r in res if float(r["base_us"]) < 5000]
-    med_sev = np.median([float(r["sev_delta_us"]) for r in cheap])
-    med_snp = np.median([float(r["snp_delta_us"]) for r in cheap])
+    if reference == "short":
+        ref = [r for r in res if r["query"].startswith("LdbcShortQuery")]
+        suffix = " (short reads)"
+    else:
+        ref = [r for r in res if float(r["base_us"]) < 5000]
+        suffix = ""
+    med_sev = np.median([float(r["sev_delta_us"]) for r in ref])
+    med_snp = np.median([float(r["snp_delta_us"]) for r in ref])
     x = [float(r["base_us"]) / 1000.0 for r in res]
+    pcts = [float(r[k]) for r in res for k in ("sev_pct", "snp_pct")]
     fig, ax = plt.subplots(
         figsize=(COLUMN_IN, 2.35),
         layout="constrained"
@@ -252,11 +258,11 @@ def figure_neo4j(rows, folder):
                zorder=4
                )
     ax.set_xlim(x_min, x_max)
-    ax.set_ylim(-10, 50)
+    ax.set_ylim(min(-10,  5 * math.floor(min(pcts) / 5) - 5), max(50, 5 * math.ceil(max(pcts) /5) + 5))
     ax.xaxis.set_major_locator(FixedLocator([1, 10, 100, 1000]))
     ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _pos: "%g" % v))
     ax.xaxis.set_minor_formatter(NullFormatter())
-    ax.set_xlabel("Mean latency of the query type on the BVM (ms, log scale)")
+    ax.set_xlabel("Mean latency of the query type on the BVM (ms, log)")
     ax.set_ylabel("Added latency (%)")
     dashed = (0, (3, 2))
     ax.legend(handles=[marker_handle("SEV", SEV, "o"),
@@ -266,14 +272,14 @@ def figure_neo4j(rows, folder):
                               color=SEV,
                               linewidth=0.9,
                               linestyle=dashed,
-                              label="constant +%.0f \u00b5s" % med_sev
+                              label=("constant +%.0f \u00b5s%s" % (med_sev, suffix)).replace("-", "\u2212")
                               ),
                        Line2D([],
                               [],
                               color=SNP,
                               linewidth=0.9,
                               linestyle=dashed,
-                              label="constant +%.0f \u00b5s" % med_snp
+                              label=("constant +%.0f \u00b5s%s" % (med_snp, suffix)).replace("-", "\u2212")
                               )
                        ],
               loc="upper right",
@@ -290,6 +296,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", type=Path, default=here / "out")
     ap.add_argument("--out", type=Path, default=here / "figures")
+    ap.add_argument("--neo4j-reference", choices=("short", "cheap"), default="short")
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     figure_overheads(read_csv(args.csv / "overheads.csv"), args.out)

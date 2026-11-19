@@ -12,7 +12,7 @@ SIZE="16G"
 RUNTIME=60
 RAMP=10
 IODEPTH=32
-REPS=1
+REPS=3
 SEED=20262027
 JOB_FILTER=""
 SCRIPT_IDR="$(dirname "$(readlink -f "$0")")"
@@ -265,4 +265,4 @@ if [[ "$FAILED" -gt 0 ]]; then
   die "$FAILED runs"
 fi
 
-log "Block size done"
+log "fio baseline done"

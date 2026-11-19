@@ -65,10 +65,10 @@ gcloud compute scp --recurse ./scripts/neo4j/dataset/sf${SF} <user>@<vm-conf>:~/
 sudo mkdir -p /mnt/dbdata/ldbc-v1 && sudo chown "$USER" /mnt/dbdata/ldbc-v1
 cd /mnt/dbdata/ldbc-v1 && mkdir -p graph params updates validation
 
-tar --use-compress-program=unzstd -xf ~/dataset/social_network-sf${SF}-CsvComposite-LongDateFormatter.tar.zst -C graph
-tar --use-compress-program=unzstd -xf ~/dataset/substitution_parameters-sf${SF}.tar.zst -C params
-tar --use-compress-program=unzstd -xf ~/dataset/social_network-sf${SF}-numpart-1.tar.zst -C updates
-tar --use-compress-program=unzstd -xf ~/dataset/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst -C validation
+tar --use-compress-program=unzstd -xf ~/scripts/neo4j/dataset/sf${SF}/social_network-sf${SF}-CsvComposite-LongDateFormatter.tar.zst -C graph
+tar --use-compress-program=unzstd -xf ~/scripts/neo4j/dataset/sf${SF}/substitution_parameters-sf${SF}.tar.zst -C params
+tar --use-compress-program=unzstd -xf ~/scripts/neo4j/dataset/sf${SF}/social_network-sf${SF}-numpart-1.tar.zst -C updates
+tar --use-compress-program=unzstd -xf ~/scripts/neo4j/dataset/sf${SF}/validation_params-interactive-v1.0.0-sf0.1-to-sf10.tar.zst -C validation
 
 
 sudo ./scripts/neo4j/load_dataset.sh --config none --scale-factor 1 --csv-dir /mnt/dbdata/ldbc-v1/graph/social_network-sf1-CsvComposite-LongDateFormatter
@@ -134,13 +134,17 @@ sudo ./scripts/neo4j/restore.sh
 /opt/ldbc-snb-interactive-v1/cypher/driver/validate.sh /etc/db-benchmark/sf10/ldbc-validate.properties
 ```
 
-## Calibrating TCR
+## Calibrating TCR (VM-SNP ONLY)
 
 You need to manually load the Dataset first
 
 ```bash
-sudo ./scripts/neo4j/calibrate_tcr.sh --config snp --regime exceeding --round calibrateTCR \
-  --warm-up 500 --operations 5000 --start-tcr 0.1 --out ~/raw_results
+# Switch and load dataset before
+sudo ./scripts/neo4j/calibrate_tcr.sh --config snp --regime resident --round calibrateTCR \
+  --warm-up 500 --operations 5000 --start-tcr <START_TCR> --out ~/raw_results --properties /etc/db-benchmark/sf1/ldbc-benchmark.properties
+
+sudo ./scripts/neo4j/calibrate_tcr.sh --config snp --regime exceeding --round calibrateTCR_RES \
+  --warm-up 500 --operations 5000 --start-tcr <START_TCR> --out ~/raw_results --properties /etc/db-benchmark/sf10/ldbc-benchmark.properties
 ```
 
 ## Benchmark Script

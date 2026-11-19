@@ -35,6 +35,6 @@ with open(manifest_path, 'w') as file:
             "direct": 1,
             "ioengine": "libaio"
         },
-        "swiotlb_mb": sh("cat /sys/kernel/debug/swiotlb/io_tlb_nslabs 2>/dev/null"),
+        "swiotlb_mb": (lambda n: int(n) // 512 if n.isdigit() else "unavailable") (sh("cat /sys/kernel/debug/swiotlb/io_tlb_nslabs 2>/dev/null")),
         "generated_at_utc": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }, file, indent=2)
