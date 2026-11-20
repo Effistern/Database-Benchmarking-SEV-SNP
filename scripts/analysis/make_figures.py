@@ -272,7 +272,7 @@ def figure_neo4j(rows, folder, reference="short"):
                               color=SEV,
                               linewidth=0.9,
                               linestyle=dashed,
-                              label=("constant +%.0f \u00b5s%s" % (med_sev, suffix)).replace("-", "\u2212")
+                              label=("constant %+.0f \u00b5s%s" % (med_sev, suffix)).replace("-", "\u2212")
                               ),
                        Line2D([],
                               [],
